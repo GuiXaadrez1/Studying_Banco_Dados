@@ -1,0 +1,26 @@
+name: Primeira-Action
+
+# Disparando evento em um push ou pull_request
+on:
+  push:
+    branches:
+      - 'main'
+
+  pull_request:
+    branches:
+      - 'main'
+
+# Executar uma tarefa
+jobs:
+  teste-simples:
+    runs-on: ubuntu-latest
+
+    steps:
+      # dando nome a primeira tarefa
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      # dando nome a segunda tarefa
+      - name: Action Realizada
+        # realizando um comando na shell só para teste
+        run: echo "Action realizada."
