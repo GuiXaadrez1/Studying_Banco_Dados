@@ -1,6 +1,8 @@
 # Introdução
 Este documento tem como principal anotar, revisar DML
 
+## DML o que é?
+
 ## Comando INSERT! 
 O comando INSERT são usados para inserir, preencher: campos, domínios, atributos que são definidos na hora da criação das tabelas do nosso bacanco de dados, abaixo vai um exemplo da sintaxe:
 
@@ -138,24 +140,19 @@ SET coluna1 = valor1, coluna2 = valor2, ...
 WHERE condição; -- NUNCA FAZER O UPDATE SEM WHERE SE NÃO PODES ATUALIZAR TODOS OS DADOS
 ```
 
-
-
-
-1. UPDATE com SELECT
+### UPDATE com SELECT
 O UPDATE não aceita um SELECT puro diretamente para inserir valores, mas você pode usar um subquery (subconsulta) no SET ou no WHERE para atualizar dados com base em consulta.
 
 Exemplo básico de UPDATE com subconsulta
 Imagine duas tabelas:
 
+```sql
 funcionarios(id, nome, salario, depto_id)
-
 departamentos(id, nome_depto, aumento)
-
+```
 Queremos atualizar o salário dos funcionários com base no aumento do departamento:
 
-sql
-Copiar
-Editar
+```sql
 UPDATE funcionarios f
 SET salario = salario + (
     SELECT aumento
@@ -167,37 +164,59 @@ WHERE EXISTS (
     FROM departamentos d
     WHERE d.id = f.depto_id
 );
-Aqui:
+```
+Explicação:
 
-O valor do aumento vem do SELECT dentro do SET.
+    O valor do aumento vem do SELECT dentro do SET.
 
-O WHERE EXISTS garante que só atualizamos funcionários cujo departamento existe.
+    O WHERE EXISTS garante que só atualizamos funcionários cujo departamento existe.
 
-2. DELETE usando SELECT no WHERE
-Você pode deletar linhas com base em condições que usam subconsultas:
 
-sql
-Copiar
-Editar
-DELETE FROM funcionarios
-WHERE depto_id IN (
-    SELECT id FROM departamentos WHERE nome_depto = 'Financeiro'
-);
-Isto apaga todos os funcionários que trabalham no departamento 'Financeiro'.
+### UPDATE com JOIN (forma recomendada no PostgreSQL)
 
-3. UPDATE com JOIN (forma recomendada no PostgreSQL)
 PostgreSQL permite UPDATE com FROM para fazer joins:
 
-sql
-Copiar
-Editar
+```sql
 UPDATE funcionarios f
 SET salario = salario + d.aumento
 FROM departamentos d
 WHERE f.depto_id = d.id
   AND d.nome_depto = 'Financeiro';
-Resumo
-Operação	Como usar SELECT?	Observação
+```
+
+Resumo:
+
+Operação Como usar SELECT?	Observação
+
 UPDATE	Subconsulta no SET ou WHERE, ou UPDATE ... FROM (join)	Atualiza com base em dados de outra tabela
-DELETE	Subconsulta no WHERE (ex: IN, EXISTS)	Deleta linhas que satisfazem a condição
-INSERT	INSERT ... SELECT	Insere dados diretamente da consulta
+
+## DELETE 
+Este é o comando que realiza a remoção física dos dados, tuplas, registros, linhas que preenche cada dóminio nas colunas de uma entidade, isto é: uma tabela.
+
+Sintaxe básica: 
+```sql
+
+-- Sempre usar DELETE COM WHERE, SE FIZER SEM VOCÊ REMOVE TODAS AS TUPLAS(REGISTROS) DA TABELA
+
+DELETE FROM <nome_tabela> WHERE (condição);
+
+-- Recomendo o funcionario de id = 6
+
+DELETE FROM funcionario  WHERE id = 6;
+```
+
+### DELETE usando SELECT no WHERE
+Você pode deletar linhas com base em condições que usam subconsultas:
+
+```sql
+DELETE FROM funcionarios
+WHERE depto_id IN (
+    SELECT id FROM departamentos WHERE nome_depto = 'Financeiro'
+);
+```
+
+Isto apaga todos os funcionários que trabalham no departamento 'Financeiro'.
+
+Resumo: 
+
+    DELETE	Subconsulta no WHERE (ex: IN, EXISTS)	Deleta linhas que satisfazem a condição
