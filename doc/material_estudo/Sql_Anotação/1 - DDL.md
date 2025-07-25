@@ -245,3 +245,20 @@ EXEMPLO:
 
 **OBS 2.:** AVALIE SE É NECESSÁRIO COLOCAR AS AÇÕES!
 
+
+## TRUNCATE
+Com o TRUNCATE podemos excluir todos os registros(linha) de uma TABELA, em uma única instrução. 
+
+Serve como a query DELETE do DML sem a CLÁSULA WHERE. Ou seja, exclui todos os registros, tuplas, linhas de uma tabela, porém não é realizado um registro de log de cada linha excluída. Por isso, é preciso tomar muito cuidado ao decidir usar esse comando. Dependendo do SGBD usado, não é possível realizar ROLLBACK após executar o 
+TRUNCATE. Já quando fazemos um DELETE sem WHERE, temos todos os registros em um log que é possível recuperar com o ROLLBACK.
+
+**Sintaxe básica do comando TRUNCATE:**
+
+```sql
+-- como fazer:
+TRUNCATE TABLE <nome_da_table>;
+ 
+-- fazendo:
+TRUNCATE TABLE produtos;
+```
+

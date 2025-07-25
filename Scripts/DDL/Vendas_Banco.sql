@@ -105,7 +105,7 @@ CREATE TABLE administrador(
 CREATE TABLE vendedor(
     idvendedor INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     idadmin INTEGER NULL, -- Deixando NULL ABLE 
-    codfun = INTEGER NOT NULL, -- código do funcionário
+    codfun INTEGER NOT NULL, -- código do funcionário
     nome VARCHAR(255) NOT NUll,
     email VARCHAR(255) NOT NULL,
     dthinsert TIMESTAMP DEFAULT NOW(),
