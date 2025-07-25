@@ -74,11 +74,24 @@ CREATE TABLE administrador(
     codadmin INTEGER NOT NULL, -- código do administrador
     nome VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
+    senha VARCHAR(255) NOT NULL,
     dthinsert TIMESTAMP DEFAULT NOW(),
     dthdelete TIMESTAMP CHECK(dthdelete >= dthinsert OR dthdelete IS NULL), -- validação do delete lógico, a data de insart não pode ser menor, permitir NULL ABLE
     statusdelete BOOLEAN DEFAULT FAlSE,
-    FOREIGN KEY (idadminfk) REFERENCES administrador(idadmin);
+    FOREIGN KEY (idadminfk) REFERENCES administrador(idadmin)
 );
+
+/*
+
+    Se algum dia tiver que modficar a tabela ou na estrutura reoganizando
+    as ordens da coluna, o ideal é fazer uma nova tabela com a estrtura 
+    desejada e se a tabela antiga estiver dados, utilzar um SELECT com insert
+    para fazer o repasse dassas informações e posteriomente deletar a tabela com
+    DROP TABLE nome_tabela, e por fim alterar o nome da tabela nova para o nome 
+    da tabela antiga:
+     
+        ALTER TABLE usuarios_novo RENAME TO usuarios;
+*/
 
 /*
     Observação:
