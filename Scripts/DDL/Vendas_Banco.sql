@@ -1,3 +1,4 @@
+-- Active: 1750708565763@@127.0.0.1@5432@sisvendas
 
 -- COMETÁRIO ACIMA É A MINHA EXTENSÃO NO VSCODE QUE CONECTA COM O BANCO DE DADOS 
 
@@ -45,8 +46,8 @@ CREATE DATABASE nome_db
 */
 
 -- Cria com parâmetros explícitos
-CREATE DATABASE nome_db
-    WITH OWNER = nome_dono
+CREATE DATABASE sisvendas
+    WITH OWNER = postgres
        ENCODING = 'UTF8'
        LC_COLLATE = 'pt_BR.UTF-8'
        LC_CTYPE = 'pt_BR.UTF-8'
@@ -63,13 +64,14 @@ CREATE DATABASE nome_db
 
 */
 
+
 -- usando diretriz que coloca o fuso horário local nos  tipos de dados de Datas e Tempos
 SET TIME ZONE 'America/Sao_Paulo';
 
 -- o admin pode cadastrar outro admin;
 CREATE TABLE administrador(
     -- GENERATED ALWAYS AS IDENTITY PRIMARY KEY MELHOR QUE SERIAL E MAIS UTILIZADO E É RECOMENDAÇÃO USAR APARTIR DA VERSÃO 10 DO POSTGRE
-    idadmin INTEGER GENERATED AS IDENTITY PRIMARY KEY,
+    idadmin INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     idadminfk INTEGER NULL, -- VAMOS PERMITIR QUE SEJA NULL ABLE ( permiter valores NULOS)
     codadmin INTEGER NOT NULL, -- código do administrador
     nome VARCHAR(255) NOT NULL,
@@ -129,13 +131,13 @@ CREATE TABLE categoria (
 -- uma categoria pode ter varios produtos um produtos
 
 CREATE TABLE produto(
-    idproduto INTEGER GENERATED ALWAYS IDENTITY PRIMARY KEY,
+    idproduto INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     idadmin INTEGER, 
-    idvedendor INTEGER,
+    idvendedor INTEGER,
     idcategoria INTEGER,
     nome VARCHAR(255) NOT NULL,
     qtd INTEGER NOT NULL,
-    preco double DOUBLE PRECISION  NOT NULL,
+    preco DOUBLE PRECISION  NOT NULL,
     dthinsert TIMESTAMP DEFAULT NOW(),
     dthdelete TIMESTAMP CHECK(dthdelete >= dthinsert OR dthdelete IS NULL),
     statusdelete BOOLEAN DEFAULT FAlSE,
@@ -147,7 +149,7 @@ CREATE TABLE produto(
 -- funcionario pode fazer varias vendas
 
 CREATE TABLE venda(
-    idvenda INTEGER GENERATED ALWAYS IDENTITY PRIMARY KEY,
+    idvenda INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     idvendedor INTEGER NOT NULL,
     idproduto INTEGER NOT NULL ,
     preco DOUBLE PRECISION NOT NULL,
@@ -158,4 +160,5 @@ CREATE TABLE venda(
     FOREIGN KEY (idvendedor) REFERENCES vendedor(idvendedor),
     FOREIGN KEY (idproduto) REFERENCES produto(idproduto)
 );
+
 
