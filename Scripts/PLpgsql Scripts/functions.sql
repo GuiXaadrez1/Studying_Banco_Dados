@@ -46,3 +46,17 @@ $$ LANGUAGE plpgsql;
 -- Para chamar, usar uma função, usa-se o SELECT
 
 SELECT calc_fat_prod('Redm 13');
+
+/*
+    Cria uma função que retorne uma trigger que ao inserir um registro na tabela 
+    que diminua a subtraia a qauntidade de produto (Entidade produto) pela quantidade
+    de produtos vendidos (Entidade venda!). Logo:
+        qtd_prod - qtd_venda = new resultado;
+*/ 
+
+CREATE OR REPLACE FUNCTION new_estoque() RETURNS TRIGGER
+AS $$
+    BEGIN
+        INSERT INTO public.vendas()
+    END;
+$$Language plpgsql;

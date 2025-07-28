@@ -63,15 +63,3 @@ Para algo reutilizável, você cria uma função.
 
 
 
-
-
-
-
-
-Perguntar ao ChatGPT
-
-
-
-Ferramentas
-
-

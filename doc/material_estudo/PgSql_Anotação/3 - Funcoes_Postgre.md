@@ -6,7 +6,24 @@ funções armazenadas dentro do Postgre com PL/PgSql.
 
 ---
 
-## ✅ 1. Criar Função
+## O são FUNCTION no Postgre ou plpgsql? 
+
+PostgreSQL oficialmente usa o termo “funções” (FUNCTIONS).
+Tecnicamente, elas são stored functions, porque:
+
+- São salvas (persistentes) no catálogo do banco (pg_proc).
+
+- Podem ser chamadas a qualquer momento, por consultas ou outras funções.
+
+- Executam dentro do servidor, sem precisar recompilar a cada chamada.
+
+Então, na prática, as funções PL/pgSQL são stored functions — mesmo que o PostgreSQL chame simplesmente de FUNCTION.
+
+Stored Function:
+
+  É um objeto de banco de dados que encapsula lógica procedural, pode receber parâmetros, retornar valores e ser executado várias vezes.
+
+## ✅ Criar Função
 
 A sintaxe base para criar uma função é:
 
@@ -36,7 +53,7 @@ END;
 $$ LANGUAGE plpgsql;
 ```
 
-### 🔄 2. Atualizar Função
+### 🔄 Atualizar Função
 
 No PostgreSQL, não existe ALTER FUNCTION para alterar o corpo.
 
@@ -70,7 +87,7 @@ Dica:
 
 - Para alterar assinatura (parâmetros ou tipo de retorno), DROP FUNCTION primeiro.
 
-## ❌ 3. Excluir Função
+## ❌ Excluir Função
 
 A sintaxe é:
 
@@ -86,7 +103,7 @@ DROP FUNCTION nome_funcao(param_tipo1, param_tipo2, ...);
 DROP FUNCTION saudacao(TEXT);
 ```
 
-### 🛡️ 4. Boas Práticas
+### 🛡️ Boas Práticas
 
 - ✅ Use LANGUAGE plpgsql; sempre que precisar de blocos BEGIN ... END.
 
@@ -167,3 +184,18 @@ Procedures permitem COMMIT/ROLLBACK internos, diferente de funções.
 | **Excluir**         | `DROP FUNCTION nome(param_tipo, ...)`           |
 | **Executar**        | `SELECT funcao(...)` ou `PERFORM funcao(...)`   |
 | **Procedure**       | `CREATE PROCEDURE ...` + `CALL nome_proc(...)`  |
+
+
+## Qual a diferença entre Stored Function e Stored Procedure?
+Essa é a parte que confunde muita gente — principalmente quem vem de Oracle, SQL Server ou MySQL.
+|                          | **Stored Function**                            | **Stored Procedure**                                               |
+| ------------------------ | ---------------------------------------------- | ------------------------------------------------------------------ |
+| Retorna valor            | **Sempre retorna** um valor (mesmo que `VOID`) | Não retorna valor direto (pode retornar via `OUT` ou `INOUT`)      |
+| Sintaxe                  | `CREATE FUNCTION`                              | `CREATE PROCEDURE`                                                 |
+| Chamada                  | `SELECT funcao(...)` ou dentro de outro SQL    | `CALL nome_procedure(...)`                                         |
+| Pode ser usada em SELECT | ✅ Sim                                          | ❌ Não                                                              |
+| Transações internas      | **Não pode** `COMMIT`/`ROLLBACK` dentro        | **Pode** `COMMIT`/`ROLLBACK` dentro                                |
+| Mais usada para          | Cálculos, regras de negócio reutilizáveis      | Lógicas de manutenção mais complexas, ETL, scripts administrativos |
+
+
+
