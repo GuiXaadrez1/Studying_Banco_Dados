@@ -54,9 +54,46 @@ SELECT calc_fat_prod('Redm 13');
         qtd_prod - qtd_venda = new resultado;
 */ 
 
-CREATE OR REPLACE FUNCTION new_estoque() RETURNS TRIGGER
+CREATE OR REPLACE FUNCTION atualizar_estoque()
+RETURNS TRIGGER 
 AS $$
     BEGIN
-        INSERT INTO public.vendas()
+        -- Atualiza a tabela produto, subtrai a quantidade vendida
+        UPDATE produto
+        SET qtd = qtd - NEW.qtd -- o NEW.qtd é a quantidade que vem da tabela referenciada venda ao ativar a trigger de after insert
+        WHERE idproduto = NEW.idproduto;
+
+        -- Retorna a linha da venda normalmente
+        RETURN NEW;
     END;
-$$Language plpgsql;
+$$ 
+LANGUAGE plpgsql;
+
+-- Esta função `atualizar_estoque` é uma função de gatilho (TRIGGER) escrita em PL/pgSQL, vinculada à tabela `venda`.
+-- Ela é chamada automaticamente toda vez que uma nova linha é inserida na `venda`, pois o gatilho é configurado como `AFTER INSERT`.
+-- Dentro do bloco `BEGIN ... END`, o objetivo é atualizar a coluna `qtd` da tabela `produto`, subtraindo a quantidade que acabou de ser vendida.
+-- O `NEW.qtd` representa a quantidade de produtos vendidos informada no comando `INSERT INTO venda (...) VALUES (...)`; o PostgreSQL cria o registro especial `NEW` com todos os campos da nova linha.
+-- Assim, `NEW.qtd` e `NEW.idproduto` não são declarados manualmente na função: eles são fornecidos pelo mecanismo interno do TRIGGER, permitindo acessar os valores recém-inseridos sem SELECTs adicionais.
+-- No entanto, o `SET SUM(qtd = qtd - NEW.qtd)` está incorreto: `SUM()` é uma função de agregação usada em SELECTs, não faz sentido em um UPDATE isolado.
+-- O correto é usar `SET qtd = qtd - NEW.qtd`, que ajusta a coluna `qtd` do produto diretamente, reduzindo o estoque de acordo com o volume da venda.
+-- Por fim, `RETURN NEW;` informa ao PostgreSQL que a operação do gatilho foi concluída e que a linha inserida na `venda` deve ser mantida como está no banco.
+-- Resumindo: o `NEW` é o registro especial que carrega os valores da operação DML disparadora (INSERT, UPDATE ou DELETE), tornando possível reagir dinamicamente dentro do PL/pgSQL.
+
+
+-- CRAINDO A NOSSA TRIGGER
+CREATE TRIGGER att_estoque
+    AFTER INSERT ON venda -- Não esquecer do ON para referenciar a tabela
+    FOR EACH ROW
+    EXECUTE PROCEDURE atualizar_estoque();
+
+-- CONSULTANDO INFORMAÇÕES NA TABELA produto
+SELECT * FROM produto;
+
+-- O produto SAMSUNG S24 ULTRA tem 5 em estoque atualmente
+
+-- INSERINDO REGISTROS NA TABELA VENDA!
+INSERT INTO public.venda (idvendedor,idproduto,preco,qtd)
+VALUES(5,1,5556.55,3);
+
+-- CONSULTANDO INFORMAÇÕES 
+SELECT * FROM produto;
