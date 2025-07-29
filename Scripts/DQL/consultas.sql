@@ -1,6 +1,6 @@
 -- Consultas Rápidas para Teste!
 SELECT * FROM public.administrador;
-SELECT * FROM public.vendedor;
+SELECT * FROM public.vendedor WHERE statusdelete = FALSE;
 SELECT * FROM public.categoria;
 SELECT * FROM public.produto;
 

@@ -57,28 +57,28 @@ SELECT calc_fat_prod('Redm 13');
 CREATE OR REPLACE FUNCTION atualizar_estoque()
 RETURNS TRIGGER 
 AS $$
+    DECLARE
+        qtd_estoque INTEGER;
     BEGIN
-        -- Atualiza a tabela produto, subtrai a quantidade vendida
-        UPDATE produto
-        SET qtd = qtd - NEW.qtd -- o NEW.qtd é a quantidade que vem da tabela referenciada venda ao ativar a trigger de after insert
-        WHERE idproduto = NEW.idproduto;
+        
+        -- Bloqueia a linha do produto para evitar corrida
+        SELECT qtd INTO qtd_estoque 
+        FROM produto 
+        WHERE idproduto = NEW.idproduto
+        FOR UPDATE;
 
-        -- Retorna a linha da venda normalmente
-        RETURN NEW;
+        IF qtd_estoque < NEW.qtd THEN 
+            RAISE EXCEPTION 'Quantidade indisponível em estoque.';
+        ELSE
+            UPDATE produto
+            SET qtd = qtd_estoque - NEW.qtd
+            WHERE idproduto = NEW.idproduto;
+
+            RETURN NEW;
+        END IF;
     END;
 $$ 
 LANGUAGE plpgsql;
-
--- Esta função `atualizar_estoque` é uma função de gatilho (TRIGGER) escrita em PL/pgSQL, vinculada à tabela `venda`.
--- Ela é chamada automaticamente toda vez que uma nova linha é inserida na `venda`, pois o gatilho é configurado como `AFTER INSERT`.
--- Dentro do bloco `BEGIN ... END`, o objetivo é atualizar a coluna `qtd` da tabela `produto`, subtraindo a quantidade que acabou de ser vendida.
--- O `NEW.qtd` representa a quantidade de produtos vendidos informada no comando `INSERT INTO venda (...) VALUES (...)`; o PostgreSQL cria o registro especial `NEW` com todos os campos da nova linha.
--- Assim, `NEW.qtd` e `NEW.idproduto` não são declarados manualmente na função: eles são fornecidos pelo mecanismo interno do TRIGGER, permitindo acessar os valores recém-inseridos sem SELECTs adicionais.
--- No entanto, o `SET SUM(qtd = qtd - NEW.qtd)` está incorreto: `SUM()` é uma função de agregação usada em SELECTs, não faz sentido em um UPDATE isolado.
--- O correto é usar `SET qtd = qtd - NEW.qtd`, que ajusta a coluna `qtd` do produto diretamente, reduzindo o estoque de acordo com o volume da venda.
--- Por fim, `RETURN NEW;` informa ao PostgreSQL que a operação do gatilho foi concluída e que a linha inserida na `venda` deve ser mantida como está no banco.
--- Resumindo: o `NEW` é o registro especial que carrega os valores da operação DML disparadora (INSERT, UPDATE ou DELETE), tornando possível reagir dinamicamente dentro do PL/pgSQL.
-
 
 -- CRAINDO A NOSSA TRIGGER
 CREATE TRIGGER att_estoque
@@ -97,3 +97,42 @@ VALUES(5,1,5556.55,3);
 
 -- CONSULTANDO INFORMAÇÕES 
 SELECT * FROM produto;
+
+-- INSERINDO REGISTROS NA TABELA VENDA NOVAMENTE!
+INSERT INTO public.venda (idvendedor,idproduto,preco,qtd)
+VALUES(1,11,10.99,50);
+
+/*
+
+INSERT INTO public.venda (idvendedor,idproduto,preco,qtd)
+VALUES(1,11,10.99,51);
+Retorna o error: Error: Quantidade indisponível em estoque.
+
+Trigger atualizada e arrumada perfeitamente.
+*/
+
+
+/*
+    Cria uma função que retorne o valor total de venda de um produto, isto é
+    a quantidade do produto vendido vezes o seu valor.
+    exemplo: (qtd_venda * preco_venda);
+*/ 
+
+-- CRIANDO A FUNÇÃO QUE FAZ ISSO PARA TODOS OS PRODUTOS
+CREATE OR REPLACE FUNCTION valor_total_venda() 
+RETURNS TABLE (nome_produto VARCHAR(255), total_venda DOUBLE PRECISION)
+AS $$
+    BEGIN 
+
+        RETURN QUERY
+            SELECT pd.nome AS nome_produto, vd.qtd * vd.preco AS total_venda
+            FROM venda vd
+            JOIN produto pd ON pd.idproduto = vd.idproduto;
+    END;    
+$$
+LANGUAGE plpgsql;
+
+-- Como a função está retornando uma tabela para pré-visualizar os dados... 
+-- podemos usar um SELECT selecionando todas as colunas...ABORT
+-- Basicamente funciona igual uma view
+SELECT * FROM valor_total_venda();

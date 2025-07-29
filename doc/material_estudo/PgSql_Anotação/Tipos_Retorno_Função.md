@@ -109,6 +109,19 @@ SELECT * FROM lista_ids();
 ```
 **Usar quando:** quer devolver várias linhas de mesmo tipo.
 
+#### : O que é RETURN QUERY?
+- É uma instrução especial dentro de uma função plpgsql do tipo RETURNS SETOF ou RETURNS TABLE.
+
+- Serve para retornar múltiplas linhas de uma consulta SELECT dentro da função.
+
+É diferente de RETURN normal:
+
+    RETURN → finaliza a função imediatamente, retornando um único valor.
+
+    RETURN QUERY → anexa os resultados de uma SELECT ao conjunto final de saída.
+
+O RETURN QUERY não executa nada sozinho — ele precisa de uma SELECT ou EXECUTE logo em seguida.
+
 ### RETURNS SETOF RECORD
 
 ```sql
