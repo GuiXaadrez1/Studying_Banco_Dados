@@ -1,0 +1,2 @@
+# Introdução
+Este documento visa explicar mais  a fundo o que é uma máquina virtual, como funciona, para que serve, quais são as vantagens e desvantagens, diferença dela para um conteriner, como funciona a sua arquitetura internar.
