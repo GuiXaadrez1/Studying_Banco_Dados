@@ -94,6 +94,14 @@ A arquitetura de containers (exemplo Docker) inclui os seguintes componentes:
 ### 6️⃣ **Drivers de Rede**  
 - Bridge, overlay, host networking.
 
-## # 🚀 Conclusão
+### arquitetura de baixo nível mostrando como funciona o conteiner
+
+<img src = "https://imgs.search.brave.com/L5sN3Lmt0fSvThsphuC965KcRbAds24JdLIY2A_N2Q8/rs:fit:0:180:1:0/g:ce/aHR0cHM6Ly9saDUu/Z29vZ2xldXNlcmNv/bnRlbnQuY29tL0da/TjAwT1RUY0llZjk5/bTJlU2pSMVpJd2tv/TVgxVk5FdE85V0k1/VmJoZnJ5X2xHRmVa/VEdzcm9RakNiUlgz/QmZfSWx1cW50a3BD/dFpmMy1YX0Vwb2RW/amtUM1ZQUWFlS1dt/NzJyZ1BzT181Z01S/Y2Q2UGZfY2twekpo/NFU1SU9QbEFhUWJa/OW09czA" />
+
+### arquitetura mais de alto nível mostrando como funcona mais ou menos o docker
+
+<img src = "https://imgs.search.brave.com/HxziJ6p1VpZO-VT_qgE0v8fxQLggdMf9vnWoYT8cHVY/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZWVrc2Zvcmdl/ZWtzLm9yZy93cC1j/b250ZW50L3VwbG9h/ZHMvMjAyMjEyMDUx/MTUxMTgvQXJjaGl0/ZWN0dXJlLW9mLURv/Y2tlci5wbmc"/>
+
+## 🚀 Conclusão
 
 Containers **não substituem totalmente as VMs**, mas complementam. São ideais para **desenvolvimento ágil, CI/CD, microserviços e escalabilidade em nuvem**, enquanto VMs ainda são melhores para cenários que exigem **isolamento de kernel ou ambientes multi-SO**.
