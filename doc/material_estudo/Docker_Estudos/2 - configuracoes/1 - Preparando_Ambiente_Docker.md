@@ -95,6 +95,7 @@ Instale ferramentas de desenvolvimento úteis:
 
 ```bash
 sudo apt install -y build-essential curl git
+sudo apt install net-tools
 ```
 
 🔹 3️⃣ Ver se está tudo certo
