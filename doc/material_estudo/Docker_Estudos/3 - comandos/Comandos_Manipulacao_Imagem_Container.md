@@ -3,6 +3,12 @@ Este documento visa mostrar como funciona os comandos de manipulação básica (
 
 ## Lista de comandos:
 
+### Fazendo um pull, baixando um container que está salvo no docker hub para o nosso repositório local
+
+```bash
+docker pull nome_imagem_container_hub
+```
+
 ### Vendo se o docker está ativo ou não
 
 ```bash
@@ -32,7 +38,7 @@ docker ps
 
 # ou
 
-docker ps -a
+docker ps -a # lista todos os containers, parados ou ativos
 
 # essa é a sintaxe nova deste comando 
 docker container ls -a
@@ -133,7 +139,7 @@ minha-imagem:1.0 → sua imagem.
 
 Como o CMD é bash, você entra num shell interativo dentro do container.
 
-## Fluco completo - ciclo de vida:
+### Fluxo completo - ciclo de vida:
 
 | Etapa                                 | Comando                              |
 | ------------------------------------- | ------------------------------------ |
@@ -187,4 +193,40 @@ docker run -i -t nome_imagem
 exit
 
 # isso vai fazer você finalizar as atividades do container
+```
+
+### Inspecionar um elemento, ver os detalhes de um elemento
+
+Aqui podemos fazer a inspeção de uma imagem para o container e ver suas camadas
+
+```bash
+docker inspect nome_imagem_container_local
+```
+
+### Removendo todos os containers de uma vez só
+
+```bash
+docker container prune
+```
+### Removendo forçadamente um container 
+
+```bash
+docker rm -f id_container
+```
+
+### removendo variasa imagens de uma vez só
+```bash
+docker rmi $(docker images -q)
+```
+
+### renomeando o nome de um container
+
+```bash
+docker rename nome_antigo nome_novo
+```
+
+### Puxando o histórioco de camadas da imagem
+
+```bash
+docker history nome_container or id_container
 ```
