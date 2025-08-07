@@ -1,17 +1,19 @@
 # Introdução
 
-Este documento visa deixar registrado como podemos fazer imagens com docker commit
+Este documento registra como criar imagens Docker utilizando o comando docker commit.
 
-**Observações:** Cada container tem camada read/only (apenas para leitura) sem modificar de fato a imagem real inicial, ou seja cada commit, cada novo container com imagens novas a partir de outras imagens, são novas imagens sem modificar a imagem originam, veja a imagem original de um container como uma view do banco de dados.
+⚠️ Atenção: Cada container Docker é instanciado a partir de uma imagem base, e cria uma camada de leitura e escrita por cima dessa imagem, sem modificá-la diretamente. Quando usamos docker commit, uma nova imagem é gerada com base nas modificações feitas no container — similar a como uma view no banco de dados representa dados sem alterar a tabela original.
 
-**Lembrando:** Essa não é a melhor opção de criar uma imagem para um container docker, porque é muito custoso e não prático
+❌ Importante: docker commit não é a forma recomendada de construir imagens Docker. Trata-se de uma abordagem pouco prática, difícil de versionar e menos reprodutível. Prefira o uso de Dockerfiles sempre que possível. Geralmente as imagens feitas pelo commit são mais pesadas.
 
-## Obtendo todas as camadas de uma imagem
+## 📂 Verificando as camadas de uma imagem
+Você pode inspecionar as camadas (layers) de uma imagem com:
 
 ```bash
-# use o comando 
-docker history nome_imagem
+docker history nome_da_imagem
 ```
+
+Isso é útil para entender o histórico de modificações ou analisar imagens criadas a partir de containers modificados.
 
 Usamos para quando queremos puxar informações da imagem da aplicação que está no container
 
@@ -52,3 +54,21 @@ usar essa forma de fazer imagens para container é completamente pesada e implí
 **Uma possível solução para isso é realizar um commit a cada alteração na nossa imagem de origem**
 
 mesmo assim não é interessante usar essa forma para criar imagens, surgira que avalie bem a necessidade do seu problema para optar por essa solução.
+
+## Considerações Finais
+
+A criação de imagens via docker commit é pesada, implícita e não reprodutível.
+
+Verifique o tamanho das camadas geradas com docker history — você pode se surpreender com o consumo de espaço!
+
+Uma possível (mas não ideal) abordagem é realizar commits incrementais após cada modificação, para isolar mudanças e reduzir acoplamento entre camadas.
+
+## Melhor abordagem
+
+Sempre que possível, use Dockerfiles para construir imagens. Eles são:
+
+- Mais claros
+
+- Mais fáceis de versionar
+
+- Reprodutíveis em qualquer ambiente

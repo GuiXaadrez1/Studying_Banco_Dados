@@ -1,2 +1,6 @@
 # ignorando arquivos .env
 .env
+
+# ignorando todos os arquivos package-lock.json
+*package-lock.json
+package-lock.json
