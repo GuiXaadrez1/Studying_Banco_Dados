@@ -212,15 +212,17 @@ docker build -f caminho/para/arquivo -t nome_da_imagem .
 
 ### Resumo de cada elemento no DockerFile
 
-| Elemento   | Explicação curta                                           |
-| ---------- | ---------------------------------------------------------- |
-| `FROM`     | Define a imagem base (Python no seu caso)                  |
-| `WORKDIR`  | Define o diretório de trabalho do container                |
-| `COPY`     | Copia arquivos/pastas para o container                     |
-| `RUN`      | Executa comandos durante o **build** da imagem             |
-| `CMD`      | Executa comandos ao **iniciar o container**                |
-| `EXPOSE`   | **Documenta** a porta que o container escuta (ex: 8000)    |
-| `ENV`      | Define variáveis de ambiente no container (ex: `ENV=prod`) |
+| Elemento  | Explicação curta                                                                                     |
+| --------- | ---------------------------------------------------------------------------------------------------- |
+| `FROM`    | Define a imagem base que será usada (ex.: `python:3.11-slim`, `node:20-alpine`)                      |
+| `WORKDIR` | Define o diretório de trabalho dentro do container onde comandos serão executados                    |
+| `COPY`    | Copia arquivos ou pastas do **host** para o sistema de arquivos do container                         |
+| `RUN`     | Executa comandos durante o **build** da imagem (instala pacotes, cria pastas, etc.)                  |
+| `CMD`     | Comando padrão executado ao **iniciar** o container (pode ser sobrescrito pelo `docker run`)         |
+| `EXPOSE`  | **Documenta** a porta que o container escuta (não faz o mapeamento, apenas registra no metadado)     |
+| `ENV`     | Define variáveis de ambiente no container, usadas pela aplicação                                     |
+| `ARG`     | Define variáveis de **build-time** (disponíveis apenas durante o build, não no runtime como o `ENV`) |
+
 
 ### Posso colocar Python e PostgreSQL juntos em um único Dockerfile?
 

@@ -230,3 +230,8 @@ docker rename nome_antigo nome_novo
 ```bash
 docker history nome_container or id_container
 ```
+
+### Listando todos os tipos de redes que os container docker trabalha
+```bash
+docker network ls
+```

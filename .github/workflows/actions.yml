@@ -15,6 +15,7 @@ jobs:
   teste-simples:
     runs-on: ubuntu-latest
 
+    # definindo tarefas
     steps:
       # dando nome a primeira tarefa
       - name: Checkout do código

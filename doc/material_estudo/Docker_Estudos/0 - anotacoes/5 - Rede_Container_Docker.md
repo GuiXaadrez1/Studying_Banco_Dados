@@ -1,5 +1,5 @@
 # Introdução 
-Este documenti visa ensinar como funciona a rede e comunicação entre computadores com docker e container. Lembre-se que docker por padrão não comparilha a mesma porta lógica de acesso com o nosso host (S.O). Para é necessário realizar algumas configurações.
+Este documento visa ensinar como funciona a rede e comunicação entre computadores com docker e container. Lembre-se que docker por padrão não comparilha a mesma porta lógica de acesso com o nosso host (S.O). É necessário realizar algumas configurações.
 
 ## Comandos introdutórios
 O objetivos destes comandos não é aprender a fundo redes com container de forma inicial
@@ -7,7 +7,7 @@ O objetivos destes comandos não é aprender a fundo redes com container de form
 Use o seguinte comando:
 
 ```bash
-# -P é uma flag que permite a exposição de portas lógicas 80 ou 8080 do host com o container
+# -p é uma flag que permite a exposição de portas lógicas 80 ou 8080 do host com o container
 
 docker run -P nome_user_docker_hub/nome_imagem_docker_hub
 
@@ -35,7 +35,7 @@ Agora basta pegar a porta lógica do container e colocar na Url do navegador, ex
 localhost:32768
 ```
 
-Agora conseguima acessar o nosso site que está no container
+Agora conseguimos acessar o nosso site que está no container
 
 ### Segunda forma de fazer o mapeamento de porta, compartilhamento de porta do container para o host e vice-versa:
 
@@ -72,5 +72,3 @@ O retorno ao listar nossos container:
 2af8bd5ac8f1   dockersamples/static-site   "/bin/sh -c 'cd /usr…"   36 seconds ago      Up 34 seconds                 80/tcp, 443/tcp, 0.0.0.0:5065->8080/tcp, [::]:5065->8080/tcp   hopeful_elion
 
 veja que a porta foi mudada ao setamento manual: 0.0.0.0:5065->8080
-
-## Explicação Aprofundada de Redes com Container
