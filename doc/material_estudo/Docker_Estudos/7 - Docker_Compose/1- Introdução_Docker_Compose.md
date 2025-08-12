@@ -64,17 +64,19 @@ Este exemplo define um serviço chamado web rodando a imagem oficial nginx e exp
 ## Comandos básicos do Docker Compose
 
 ```bash
-docker-compose up # cria e inicia todos os containers.
+docker compose up # cria e inicia todos os containers.
 
-docker-compose up -d # faz o mesmo, mas em background (detached).
+docker compose up -d # faz o mesmo, mas em background (detached).
 
-docker-compose down #para e remove containers, redes, volumes e imagens criadas.
+docker compose down #para e remove containers, redes, volumes e imagens criadas.
 
-docker-compose ps # lista containers rodando.
+docker compose ps # lista containers rodando.
 
-docker-compose logs # exibe logs dos containers.
+docker compose logs # exibe logs dos containers.
 
-docker-compose build # força rebuild das imagens definidas com build local.
+docker compose build # força rebuild das imagens definidas com build local.
+
+docker compose --env-file nome_arquio.env # coloca as variáveis de ambiente no docker-compose
 ```
 
 ## Versões do arquivo Compose
