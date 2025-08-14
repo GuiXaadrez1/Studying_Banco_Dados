@@ -4,3 +4,12 @@
 # ignorando todos os arquivos package-lock.json
 *package-lock.json
 package-lock.json
+
+# Ignorar ambientes virtuais Python
+.venv/
+*/.venv/
+
+# Ignorar caches do Python
+__pycache__/
+*/__pycache__/
+
