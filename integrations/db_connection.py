@@ -25,65 +25,75 @@ try:
     # with estrutura de controle que facilita o gerenciamento de recursos, 
     # como arquivos, conexões de banco de dados, e outros objetos que precisam ser abertos 
     # e fechados.
+    
+    # Dica: Usar o with apenas para cursor e não para abrir conexão
     def connection():
-        with psycopg2.connect(
+        conn = psycopg2.connect(
             database=os.getenv('DATABASE'),
             user=os.getenv('USER'),
             password=os.getenv('PASSWORD'),
             port = os.getenv("PORT")
-        ) as conn:
+        )
 
-            # declarando o cursos 
-            with conn.cursor() as cur:
-                # Selecionado todas as informações da tabela vendas
+        # declarando o cursos 
+        # lembrando que o with vai fechar o cursor automaticamente
+        # sem a necessidade de fazer isso manualmente com método cur.close()
+        with conn.cursor() as cur:
+            # Selecionado todas as informações da tabela vendas
+            
+            # fazendo um select simples com a tabela do vendedor
+            def consultar_vendedor_ativos():
+                query = "SELECT codfun, nome, email FROM vendedor WHERE statusdelete = FALSE"
+                cur.execute(query)
+                resultado = cur.fetchall()
                 
-                
-                # fazendo um select simples com a tabela do vendedor
-                def consultar_vendedor_ativos():
-                    query = "SELECT codfun, nome, email FROM vendedor WHERE statusdelete = FALSE"
-                    cur.execute(query)
-                    resultado = cur.fetchall()
-                    
-                    # craindo uma lista vazia
-                    vendedores = []
+                # craindo uma lista vazia
+                vendedores = []
 
-                    for row in resultado:
-                        # desempacota a tupla
-                        # basicamente vamos atribuir os elementos da tupla diretamente em variáveis.
-                        codfun, nome, email = row
-                        
-                        # Craindo dicionário para comportar os dados
-                        at_dicio = {
-                            "Código Funcionário": codfun,
-                            "Nome": nome,
-                            "Email": email
-                        }
-                        vendedores.append(at_dicio)
+                for row in resultado:
+                    # desempacota a tupla
+                    # basicamente vamos atribuir os elementos da tupla diretamente em variáveis.
+                    codfun, nome, email = row
+                    
+                    # Craindo dicionário para comportar os dados
+                    at_dicio = {
+                        "Código Funcionário": codfun,
+                        "Nome": nome,
+                        "Email": email
+                    }
+                    vendedores.append(at_dicio)
 
-                    return vendedores
+                    # realizando commits das alterações da base de dados
+                    conn.commit()
+                    
+                return vendedores
+            
+            # fazendo uma função que retornar dados de um select simples
+            def info_vendas():  
+                query="SELECT * FROM venda ORDER BY preco DESC"           
+                cur.execute(query)
                 
-                # fazendo uma função que retornar dados de um select simples
-                def info_vendas():  
-                    query="SELECT * FROM venda ORDER BY preco DESC"           
-                    cur.execute(query)
-                    
-                    resultado = cur.fetchall()
-                    
-                    return resultado
+                resultado = cur.fetchall()
                 
-                '''
-                print()
-                # iteração básica
-                for linha in info_vendas():
-                    print(list(linha))
-                '''    
-                    
+                return resultado
+            
+            '''
+            print()
+            # iteração básica
+            for linha in info_vendas():
+                print(list(linha))
+            '''    
+        
+        # Fechando conexão com o banco de dados
+        conn.close()
+        
 except Exception as error:
     print("Aconteceu algum erro aqui: ", error)
 
 
 if __name__ == "__main__":
 
+    # Realizando conexão com o banco de dados
     connection()
-    
+
 

@@ -45,7 +45,7 @@ $$ LANGUAGE plpgsql;
 
 -- Para chamar, usar uma função, usa-se o SELECT
 
-SELECT calc_fat_prod('Redm 13');
+SELECT calc_fat_prod('QBOA 2L');
 
 /*
     Cria uma função que retorne uma trigger que ao inserir um registro na tabela 
@@ -136,3 +136,29 @@ LANGUAGE plpgsql;
 -- podemos usar um SELECT selecionando todas as colunas...ABORT
 -- Basicamente funciona igual uma view
 SELECT * FROM valor_total_venda();
+
+-- Crie uma função que dado o nome de um vedendor, retorne a quantidade total das vendas do produto e o produto
+CREATE OR REPLACE FUNCTION total_vendas_vendedor(vendedor_nome VARCHAR)
+RETURNS TABLE(
+    nome_vendedor VARCHAR,
+    nome_produto VARCHAR,
+    total_venda NUMERIC
+) AS $$
+BEGIN
+    RETURN QUERY
+        SELECT 
+            vd.nome AS nome_vendedor,
+            pd.nome AS nome_produto,
+            SUM(venda.preco * venda.qtd)::NUMERIC AS total_venda -- ::NUMERIC, aqui estamos realizando casting ou seja, convertento o tipo de dado explícitamente
+        FROM venda
+        INNER JOIN public.vendedor AS vd 
+            ON vd.idvendedor = venda.idvendedor
+        INNER JOIN public.produto AS pd 
+            ON pd.idproduto = venda.idproduto
+        WHERE vd.nome = vendedor_nome
+        GROUP BY vd.nome, pd.nome;
+END;
+$$ LANGUAGE plpgsql;
+
+# Chamando a função que retorna uma tabela
+SELECT * FROM total_vendas_vendedor('Maria Rosa Linda');
