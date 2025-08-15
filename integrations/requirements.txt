@@ -1,2 +1,7 @@
 python-dotenv==1.1.1
-psycopg2==2.9.10
+
+# não vem empacotado, ou seja, pré-copilado, é necessário ser copilado para instale depedências
+# psycopg2-binary==2.9.10
+
+# já vem empacotado, ou seja, pré-copilado, ideal para instalações rápidas
+psycopg2-binary==2.9.10

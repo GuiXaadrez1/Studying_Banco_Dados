@@ -41,7 +41,8 @@ class ConnectionDatabase:
             database=os.getenv('DATABASE'),
             user=os.getenv('USER'),
             password=os.getenv('PASSWORD'),
-            port=os.getenv("PORT")
+            port=os.getenv("PORT"),
+            host=os.getenv("HOST")
         )
         
     # método que realiza a consulta referente a todas as informações de um vendedor

@@ -1,1 +1,81 @@
-#
+# Crie um arquivo docker-compose para gerenciar uma aplicação Python integrada ao banco de dados
+# relacional PostgreSQL
+
+# link guia docker-compose: https://blog.4linux.com.br/docker-compose-explicado/
+# link guia docker-compose: https://www.gasparbarancelli.com/post/passo-a-passo-como-criar-e-executar-um-container-postgres-com-docker
+
+version: "3.9"
+
+# Declarando globalmente os nossos volumes
+volumes:
+  # definindo o nome do nosso volume 
+  pgdata:
+    # o driver do nosso volume
+    driver: local
+
+# definindo globalmente a nossa network (nossa rede personalizada)
+networks:
+  # nome da nossa rede, praticamente o nosso canal (pipe) de comunicação entre os containers
+  backend:
+    # rede padrão gerenciada automaticamente pelo Docker
+    driver: bridge
+
+# Definindo o nosso conjunto de containers
+services:
+  # nome do nosso primeiro container
+  integration_test:
+    # buildando, criando o nosso container com um Dockerfile
+    build:
+      # caminho onde está o Dockerfile
+      context: .
+      # nome do arquivo Dockerfile personalizado
+      dockerfile: Integration_app.dockerfile
+    
+    # ordem de dependências dos containers
+    depends_on:
+      # espera o postgres estar saudável antes de iniciar
+      postgres:
+        condition: service_healthy
+    
+    # conectando o container à rede personalizada
+    networks:
+      - backend
+
+  # nome do nosso segundo container
+  postgres:
+    # imagem base do PostgreSQL
+    image: postgres:15
+    
+    # restart: reinicia sempre que cair ou manualmente
+    restart: always
+    
+    # definindo portas que podem ser mapeadas pelo nosso host
+    # primeiro valor é a porta do host e o segundo é o valor interno do container
+    ports:
+      - "5431:5432"
+
+    # Definindo as variáveis de ambiente a partir do arquivo .env
+    env_file:
+      - .env
+
+    # definindo em qual diretório o nosso volume vai estar no container
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+    # conectando o container à rede personalizada
+    networks:
+      - backend
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+    # healthcheck para garantir que o Postgres está pronto antes de outros containers tentarem se conectar
+    #healthcheck:
+      # comando que verifica a disponibilidade do banco usando a variável de ambiente do usuário
+      #test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      #interval: 5s       # intervalo entre tentativas
+      #timeout: 5s        # tempo máximo de espera por tentativa
+      #retries: 5         # número de tentativas antes de considerar o serviço como unhealthy
