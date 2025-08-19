@@ -1,3 +1,7 @@
+-- Active: 1755560023785@@127.0.0.1@5431@sisvendas
+
+-- a chava acima é chave_conexão com o postgres do container com o vscode
+
 -- Active: 1750708565763@@127.0.0.1@5432@sisvendas
 
 -- Criando NOSSOS INSERTS e SELECTS BÁSICOS
@@ -10,6 +14,10 @@ VALUES(123456,'admingui','admingui@gmail.com',MD5('123456'));
 
 INSERT INTO public.administrador (codadmin,nome,email,senha)
 VALUES(123456,'adminfab','adminfab@gmail.com',MD5('123457'));
+
+-- Resetando a contagem da primary key
+# ALTER SEQUENCE vendedor_idvendedor_seq RESTART WITH 1;
+
 
 -- Atualizando o codadmin do adminfb
 UPDATE public.administrador SET codadmin = 123457 WHERE idadmin = 2;

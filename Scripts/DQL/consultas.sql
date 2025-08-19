@@ -1,3 +1,7 @@
+-- Active: 1755555442561@@127.0.0.1@5431@sisvendas
+
+-- a chava acima é chave_conexão com o postgres do container com o vscode
+
 -- Consultas Rápidas para Teste!
 SELECT * FROM public.administrador;
 SELECT * FROM public.vendedor WHERE statusdelete = FALSE;

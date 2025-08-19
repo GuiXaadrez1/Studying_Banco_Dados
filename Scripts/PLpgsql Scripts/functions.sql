@@ -1,9 +1,14 @@
+-- Active: 1755560023785@@127.0.0.1@5431@sisvendas
+
+-- a chava acima é chave_conexão com o postgres do container com o vscode
+
 -- Active: 1750708565763@@127.0.0.1@5432@sisvendas@public
 
 /*Vamos criar uma função simples para entender a sintaxe do plpgsql*/
 
-CREATE OR REPLACE FUNCTION resultado_soma(a  numeric b numeric) RETURN numeric
-AS $$
+CREATE OR REPLACE FUNCTION resultado_soma ( a numeric, b numeric) RETURN numeric
+AS 
+$$
     DECLARE
         resultado numeric;
     BEGIN
@@ -22,7 +27,8 @@ $$Language plpgsql;
 
 CREATE OR REPLACE FUNCTION calc_fat_prod(produto_nome VARCHAR(255)) 
 RETURNS DOUBLE PRECISION
-AS $$
+AS 
+$$
     DECLARE
         resultado DOUBLE PRECISION;
     BEGIN
@@ -161,4 +167,4 @@ END;
 $$ LANGUAGE plpgsql;
 
 # Chamando a função que retorna uma tabela
-SELECT * FROM total_vendas_vendedor('Maria Rosa Linda');
+SELECT * FROM total_vendas_vendedor('José Antônio');

@@ -1,8 +1,10 @@
 # Crie um arquivo docker-compose para gerenciar uma aplicação Python integrada ao banco de dados
 # relacional PostgreSQL
 
-# link guia docker-compose: https://blog.4linux.com.br/docker-compose-explicado/
-# link guia docker-compose: https://www.gasparbarancelli.com/post/passo-a-passo-como-criar-e-executar-um-container-postgres-com-docker
+# OBSERVAÇÕES - NÃO ESQUECER DE COLOCAR CADA CONTAINER PARA LER AS VARIÁVEIS DE AMBIENTE
+# NO ARQUIVO.env POIS, SE NÃO FIZER ISSO OS CONTAINER POR MAIS QUE ESTEJAM NO MESMO CANAL
+# DE COMUNICAÇÃO, REDE VIA TCP, VAI DAR PROBLEMA. POIS O CONTAINER PODE TENTAR PUXAR 
+# INFOMRAÇÕES LOCALMENTE AO INVÉS DE FAZER ISSO PELA REDE.
 
 version: "3.9"
 
@@ -29,7 +31,7 @@ services:
       # caminho onde está o Dockerfile
       context: .
       # nome do arquivo Dockerfile personalizado
-      dockerfile: Integration_app.dockerfile
+      dockerfile: integration_app.dockerfile
     
     # ordem de dependências dos containers
     depends_on:
@@ -37,26 +39,41 @@ services:
       postgres:
         condition: service_healthy
     
+    # lendo as variáveis de ambiente no arquivo.env para os dois container se comunicarem
+    env_file:
+      - .env # nome do arquivo .env
+
     # conectando o container à rede personalizada
     networks:
       - backend
 
   # nome do nosso segundo container
   postgres:
-    # imagem base do PostgreSQL
-    image: postgres:15
+    # imagem base do PostgreSQL na versão 15 do alpine
+    image: postgres:15.3-alpine
     
-    # restart: reinicia sempre que cair ou manualmente
+    # Definindo um nome para o container
+    container_name: postgres
+
+    # restart: reinicia sempre que cair o container ou manualmente
     restart: always
     
+    # Definindo as variáveis de ambiente
+    
+    #environment:
+    # - POSTGRES_USER=USER
+    # - POSTGRES_PASSWORD=PASSWORD
+    # - POSTGRES_DB=DATABASE
+
     # definindo portas que podem ser mapeadas pelo nosso host
     # primeiro valor é a porta do host e o segundo é o valor interno do container
     ports:
       - "5431:5432"
+    
+    # Definindo as variáveis de ambiente apartir de um arquivo .env
 
-    # Definindo as variáveis de ambiente a partir do arquivo .env
     env_file:
-      - .env
+      - .env # nome do arquivo .env
 
     # definindo em qual diretório o nosso volume vai estar no container
     volumes:

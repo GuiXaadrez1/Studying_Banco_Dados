@@ -131,7 +131,7 @@ services:
 
 ➜ Criado pelo Docker, persiste mesmo que o container seja apagado.
 
-## sBind mount (persistente no host)
+## Bind mount (persistente no host)
 
 ```yaml
 services:

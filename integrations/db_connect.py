@@ -8,6 +8,8 @@ de vendas que ele fez naquele dia.
 
 from dotenv import load_dotenv # puxa as variáveis de ambiente do arquivo .env
 import psycopg2 # faz conexão com o banco de dados
+from psycopg2 import OperationalError # para fazermos debug
+import time # para podemos fazer um descanso de 1 segundo
 import os # lib nativa para manipulação de diretórios
 import sys
 
@@ -36,14 +38,21 @@ class ConnectionDatabase:
     # definindo o nosso método construtor
     def __init__(self):
         
-        # conexão privada a classe (apenas os métodos internos da classe tem acesso a esses atributos)
-        self.__conn = psycopg2.connect(
-            database=os.getenv('DATABASE'),
-            user=os.getenv('USER'),
-            password=os.getenv('PASSWORD'),
-            port=os.getenv("PORT"),
-            host=os.getenv("HOST")
-        )
+        while True:
+            try:
+                # conexão privada a classe (apenas os métodos internos da classe tem acesso a esses atributos)
+                self.__conn = psycopg2.connect(
+                    host=os.getenv("HOST"),
+                    port=os.getenv("PORT"),
+                    user=os.getenv("POSTGRES_USER"),
+                    password=os.getenv("POSTGRES_PASSWORD"),
+                    database=os.getenv("POSTGRES_DB")
+                )
+                # se conectar com sucesso, sai do loop
+                break
+            except OperationalError:
+                print("Banco ainda não está pronto, aguardando 1s...")
+                time.sleep(1)
         
     # método que realiza a consulta referente a todas as informações de um vendedor
     def consultar_vendedor_ativos(self):
@@ -83,7 +92,7 @@ class ConnectionDatabase:
             return vendedores
 
     # criando método publico que permite consultar o 
-    def consultar_produto_total_venda_vendedor(self,nome_vendedor="Maria Rosa Linda")->list:
+    def consultar_produto_total_venda_vendedor(self,nome_vendedor="José Antônio")->list:
         
         # acessando os atributos privados para abrir conexão
         with self.__conn.cursor() as cur:
@@ -138,11 +147,12 @@ class ConnectionDatabase:
                 }
                 
                 resultados.append(dicio_info)
-                
-                return resultados
+            
+            # Colocando os resultados fora do for para não dar b.o     
+            return resultados
             
             # realizando commits das alterações da base de dados
-            self.__conn.commit()
+            #self.__conn.commit()
 
             # Fechando conexão com o banco de dados
             # self.__conn.close() 
@@ -152,9 +162,15 @@ class ConnectionDatabase:
 # colcando isso para não dar problema na hora de executar com outros arquivos
 if __name__ == "__main__":
     
-    # Materializando a nossa conexão com o banco de dados
-    db = ConnectionDatabase()
-    
+    while True:
+        try:
+            # Materializando a nossa conexão com o banco de dados
+            db = ConnectionDatabase()
+            break
+        except OperationalError:
+            print("Banco ainda não está pronto, aguardando 1s...")
+            time.sleep(1)
+ 
     # pegando a lista de dicionários
     lista = db.consultar_vendedor_ativos()
     
@@ -167,7 +183,7 @@ if __name__ == "__main__":
     
     print("\n-----------------------------------------------------------------------------------------------------------\n")
 
-    consultar_resultados_vendas = db.consultar_produto_total_venda_vendedor('Maria Rosa Linda')
+    consultar_resultados_vendas = db.consultar_produto_total_venda_vendedor('José Antônio')
     
     print("Nome Vendedor(a)  | Nome Produto        | Total Vendas ")
     for elementos in consultar_resultados_vendas:

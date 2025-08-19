@@ -1,4 +1,8 @@
--- Active: 1750708565763@@127.0.0.1@5432@sisvendas
+-- Active: 1755560023785@@127.0.0.1@5431@sisvendas
+
+-- a chava acima é chave_conexão com o postgres do container com o vscode
+
+-- Active: 1750708565763@@127.0.0.1@5432@sisvendas chave_conexão com o postgres na máquina local
 
 -- COMETÁRIO ACIMA É A MINHA EXTENSÃO NO VSCODE QUE CONECTA COM O BANCO DE DADOS 
 

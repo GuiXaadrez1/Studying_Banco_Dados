@@ -13,3 +13,10 @@ package-lock.json
 __pycache__/
 */__pycache__/
 
+# Ignorar ambientes virtuais Python
+.venv/
+*/.venv/
+
+# Ignorar caches do Python
+__pycache__/
+*/__pycache__/
