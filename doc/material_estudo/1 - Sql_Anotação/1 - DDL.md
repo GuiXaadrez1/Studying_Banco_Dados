@@ -158,9 +158,11 @@ Sintaxe básica para a alteração de tabelas:
 ```
 Comandos:
 
-    - ADD COLUMN novo_atributo tipo de dado + constraints(restrição de coluna)
-    - ADD CONSTRAINTS nome da restrição constraints (restrição de tabela ou coluna)
-    - DROP COLUMN nome da coluna contrainsts (restrições de chave se houver [ RESTRICT, CASCADE])
+- ADD COLUMN novo_atributo tipo de dado + constraints(restrição de coluna)
+
+- ADD CONSTRAINTS nome da restrição constraints (restrição de tabela ou coluna)
+
+- DROP COLUMN nome da coluna contrainsts (restrições de chave se houver [ RESTRICT, CASCADE])
 
 **OBS 1.:** RESTRIÇÕES DEVEM SER ANALISADAS SE É NECESSÁRIA COLOCAR OU NÃO.
 
